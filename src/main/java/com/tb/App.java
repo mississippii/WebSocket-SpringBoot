@@ -18,28 +18,32 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class App {
 
     public static void main(String[] args) {
+        try{
+            VertoConnectParams params = new VertoConnectParams("09638999999",
+                    "09638999999asdf",
+                    new WebSocketSettings(WebSocketType.Ws, "ws://103.248.13.73:8081", 1000),
+                    new ServicePingParams());
+            VertoConnector vc = new VertoConnector(params);
+            vc.connectOrInit();
+            Delay.sleep(1000);
+            vc.login();
 
-        VertoConnectParams params = new VertoConnectParams("09638999999",
-                "09638999999##asdf",
-                new WebSocketSettings(WebSocketType.Ws, "ws://103.248.13.73:8081", 1000),
-                new ServicePingParams());
-        VertoConnector vc = new VertoConnector(params);
-        vc.connectOrInit();
-        Delay.sleep(1000);
-        vc.login();
-
-        RestSettings restSettings = new RestSettings("http://36.255.71.143:5280/rest");
-        XmppSettings xmppSettings = new XmppSettings("36.255.71.143", 5222, "appout",
-                "test123", "localhost", "Conversations.restB",
-                ConnectionConfiguration.SecurityMode.disabled, 1);
-        JingleConnector jingleConnector = new JingleConnector(xmppSettings, restSettings);
-        jingleConnector.connectOrInit();
-        JingleCallLeg jingleCall = new JingleCallLeg(jingleConnector);
+            RestSettings restSettings = new RestSettings("http://36.255.71.143:5280/rest");
+            XmppSettings xmppSettings = new XmppSettings("36.255.71.143", 5222, "appout",
+                    "test123", "localhost", "Conversations.restB",
+                    ConnectionConfiguration.SecurityMode.disabled, 1);
+            JingleConnector jingleConnector = new JingleConnector(xmppSettings, restSettings);
+            jingleConnector.connectOrInit();
+            JingleCallLeg jingleCall = new JingleCallLeg(jingleConnector);
         /*XmppRun xmppRun = new XmppRun();
         xmppRun.XmppInstance();*/
-        // Wait for a keystroke before exiting
-        jingleCall.setVertoConnector(vc);
-        SpringApplication.run(App.class, args);
+            // Wait for a keystroke before exiting
+            jingleCall.setVertoConnector(vc);
+            SpringApplication.run(App.class, args);
+        }
+        catch(Exception e){
+            System.out.println(e.getStackTrace());
+        }
     }
 
 }

@@ -42,10 +42,14 @@ public class SpringWebSocketBuilder extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(@NotNull WebSocketSession session, Throwable exception) throws Exception {
-        for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
-            publicListener.onTransportError(
-                    new Payload(UUID.randomUUID().toString(), "Websocket error. " + exception.getMessage()
-                            , TransportPacket.TransportError));
+        try {
+            for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
+                publicListener.onTransportError(
+                        new Payload(UUID.randomUUID().toString(), "Websocket error. " + exception.getMessage()
+                                , TransportPacket.TransportError));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -53,7 +57,7 @@ public class SpringWebSocketBuilder extends TextWebSocketHandler {
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus status) throws Exception {
         for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
             publicListener.onTransportClose(
-                    new Payload(UUID.randomUUID().toString(), "Websocket closed.", TransportPacket.TransportDown));
+                    new Payload(UUID.randomUUID().toString(), "Websocket closed. Reconnect", TransportPacket.TransportDown));
         }
     }
 }

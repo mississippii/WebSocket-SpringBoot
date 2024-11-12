@@ -47,7 +47,6 @@ public class WebSocketTransport implements Transport {
         WebSocketConnectionManager connectionManager = new WebSocketConnectionManager(client, builder, this.webSocketSettings.getUri());
         connectionManager.setAutoStartup(true);
         connectionManager.start();
-
         while (this.session == null) {
             try {
                 Thread.sleep(100);

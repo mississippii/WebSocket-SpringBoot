@@ -103,10 +103,6 @@ public class JingleCallLeg extends AbstractCallLeg {
 
     }
 
-    @Override
-    public void answer() {
-
-    }
 
     @Override
     public String extractSdp(String sdp) {
@@ -150,7 +146,7 @@ public class JingleCallLeg extends AbstractCallLeg {
                     .getFirstOccuranceOfParamValueByIndexAndTerminatingStr(msg, "id='jm-propose-", "' type='chat'"));
 
             this.setPhoneNumber(StringUtil.Parser
-                    .getFirstOccuranceOfParamValueByIndexAndTerminatingStr(msg, "phone='", "@localhost'"));
+                    .getFirstOccuranceOfParamValueByIndexAndTerminatingStr(msg, "phone='+88", "@localhost'"));
 
 
             this.ringing();
@@ -296,7 +292,14 @@ public class JingleCallLeg extends AbstractCallLeg {
         p.getMetadata().put("useRest", true);
         this.getConnector().sendMsgToConnector(p);
     }
-
+    @Override
+    public void answer() {
+        String answer = ANSWER.createMessage(getaParty() + "/" + getaPartyDeviceId(),
+                getbParty() + "/" + getbPartyDeviceId(),this.getUniqueId(),"answer",this.getPriorityId(),"1.1.1.1", 0);
+        Payload p = new Payload(UUIDGen.getNextAsStr(), answer, TransportPacket.Payload);
+        p.getMetadata().put("useRest", true);
+        this.getConnector().sendMsgToConnector(p);
+    }
     public void retarct() {
         String retract = RETRACT.createMessage(getaParty(),
                 getbParty() + "/" + getbPartyDeviceId(), getUniqueId());

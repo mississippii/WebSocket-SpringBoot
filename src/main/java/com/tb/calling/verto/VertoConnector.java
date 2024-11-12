@@ -118,6 +118,8 @@ public class VertoConnector implements Connector {
                         params.webSocketSettings.getUri(),
                         vertoWebSocketSessionId, this.intGenerator.getNext());
         System.out.println(data);
+        transport.sendMessage(new Payload(UUID.randomUUID().toString(),
+                data, VertoPacket.Login));
     }
 
     @Override

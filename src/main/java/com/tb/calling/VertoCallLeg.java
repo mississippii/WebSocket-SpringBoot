@@ -57,12 +57,14 @@ public class VertoCallLeg extends AbstractCallLeg {
         ICECandidate firstCandidate = null;
         Map.Entry<String, ICECandidate> firstEntry = this.remoteIceCandidates.entrySet().iterator().next();
         firstCandidate = firstEntry.getValue();
-        String msg = StartCall.createMessage("01789896378", this.getUniqueId(), connector.getSessionId(), intGenerator.getNext()
+        String msg = StartCall.createMessage(jingleLeg.getPhoneNumber(), this.getUniqueId(), connector.getSessionId(), intGenerator.getNext()
                 , firstCandidate.getIpAddress(), firstCandidate.getPort(), jingleLeg.getJingleSdpParamA().getMsid(),
                 jingleLeg.getJingleSdpParamA().getUfrag(), jingleLeg.getJingleSdpParamA().getPwd(),
                 jingleLeg.getJingleSdpParamA().getFingerprint(), jingleLeg.getJingleSdpParamA().getSsrc());
         connector.sendMsgToConnector(new Payload(this.getUniqueId(), msg, VertoPacket.Invite));
         System.out.println(msg);
+        System.out.println(jingleLeg.getPhoneNumber());
+
         this.callState = CallState.SESSION_START;
     }
 
@@ -152,7 +154,10 @@ public class VertoCallLeg extends AbstractCallLeg {
             switch (callMsgType) {
                 case TRYING -> {
                 }
-                case RINGING, ANSWER -> {
+                case ANSWER -> {
+                    this.jingleLeg.answer();
+                }
+                case RINGING-> {
                     if (msg.contains("msid-semantic")) {
                         try {
                             FileWriter fileWriter = new FileWriter("c:/temp/vertoSdp.txt");
@@ -187,8 +192,8 @@ public class VertoCallLeg extends AbstractCallLeg {
                 }
                 case HANGUP -> {
                     this.jingleLeg.endJingleA();
-//                    this.jingleLeg.finishjingleA();
-//                    this.jingleLeg.retarct();
+                    this.jingleLeg.retarct();
+                    this.jingleLeg.finishjingleA();
                     this.callState = CallState.IDLE;
                     this.jingleLeg.callState = CallState.IDLE;
                 }
