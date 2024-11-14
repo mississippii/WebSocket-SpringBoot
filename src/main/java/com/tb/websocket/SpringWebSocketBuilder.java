@@ -13,20 +13,19 @@ import java.util.UUID;
 
 public class SpringWebSocketBuilder extends TextWebSocketHandler {
 
-    WebSocketTransport connectionManager;
-
-    public SpringWebSocketBuilder(WebSocketTransport connectionManager) {
-        this.connectionManager = connectionManager;
+    WebSocketTransport transportImpl;
+    public SpringWebSocketBuilder(WebSocketTransport transportImpl) {
+        this.transportImpl = transportImpl;
     }
 
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
         try {
-            for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
+            for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
                 publicListener.onTransportOpen(
                         new Payload(UUID.randomUUID().toString(), "connected", TransportPacket.TransportUp));
             }
-            this.connectionManager.onWebSocketConnect(session);
+            this.transportImpl.onWebSocketConnect(session);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,7 +33,7 @@ public class SpringWebSocketBuilder extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (TransportListener publicListener : connectionManager.getPublicListeners()) {
+        for (TransportListener publicListener : transportImpl.getPublicListeners()) {
             publicListener.onTransportMessage(new Payload(UUID.randomUUID().toString(),
                     message.getPayload(), TransportPacket.Payload));
         }
@@ -43,7 +42,7 @@ public class SpringWebSocketBuilder extends TextWebSocketHandler {
     @Override
     public void handleTransportError(@NotNull WebSocketSession session, Throwable exception) throws Exception {
         try {
-            for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
+            for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
                 publicListener.onTransportError(
                         new Payload(UUID.randomUUID().toString(), "Websocket error. " + exception.getMessage()
                                 , TransportPacket.TransportError));
@@ -55,9 +54,10 @@ public class SpringWebSocketBuilder extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus status) throws Exception {
-        for (TransportListener publicListener : this.connectionManager.getPublicListeners()) {
+        for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
             publicListener.onTransportClose(
                     new Payload(UUID.randomUUID().toString(), "Websocket closed. Reconnect", TransportPacket.TransportDown));
         }
+        this.transportImpl.onWebSocketClose(session, status,this.transportImpl.reconnectThresholdReached);
     }
 }
