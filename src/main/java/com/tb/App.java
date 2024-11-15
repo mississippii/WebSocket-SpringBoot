@@ -7,6 +7,7 @@ import com.tb.calling.verto.VertoConnector;
 import com.tb.common.Delay;
 import com.tb.common.WebSocketType;
 import com.tb.common.eventDriven.ServicePingParams;
+import com.tb.websocket.JettyWebSocketBuilder;
 import com.tb.xmpp.component.WeatherComponent;
 import com.tb.transport.rest.RestSettings;
 import com.tb.transport.xmpp.XmppSettings;
@@ -21,8 +22,11 @@ import org.xmpp.component.ComponentException;
 public class App {
 
     public static void main(String[] args) {
+        JettyWebSocketBuilder builder= new JettyWebSocketBuilder(
+                new WebSocketSettings(WebSocketType.Ws, "ws://103.248.13.73:8081", 1000)
+        );
         //testXmppComponent();
-        VertoConnectParams params = new VertoConnectParams("09638999999",
+        /*VertoConnectParams params = new VertoConnectParams("09638999999",
                 "09638999999asdf",
                 new WebSocketSettings(WebSocketType.Ws, "ws://103.248.13.73:8081", 1000),
                 new ServicePingParams());
@@ -38,10 +42,7 @@ public class App {
         JingleConnector jingleConnector = new JingleConnector(xmppSettings, restSettings);
         jingleConnector.connectOrInit();
         JingleCallLeg jingleCall = new JingleCallLeg(jingleConnector);
-        /*XmppRun xmppRun = new XmppRun();
-        xmppRun.XmppInstance();*/
-        //Wait for a keystroke before exiting
-        jingleCall.setVertoConnector(vc);
+        jingleCall.setVertoConnector(vc);*/
         SpringApplication.run(App.class, args);
     }
 

@@ -79,7 +79,6 @@ public class WebSocketTransport implements Transport {
                 throw new RuntimeException(e);
             }
         }
-
         System.out.println("WebSocket connected.");
     }
 
