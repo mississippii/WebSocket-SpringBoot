@@ -1,7 +1,7 @@
 package com.tb.websocket;
 
 import com.tb.common.eventDriven.RequestAndResponse.Enums.TransportPacket;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.common.eventDriven.TransportListener;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.socket.CloseStatus;
@@ -12,52 +12,65 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.UUID;
 
 public class SpringWebSocketBuilder extends TextWebSocketHandler {
-
-    WebSocketTransport transportImpl;
-    public SpringWebSocketBuilder(WebSocketTransport transportImpl) {
-        this.transportImpl = transportImpl;
+    private final WebSocketTransport webSocketTransport;
+    public SpringWebSocketBuilder(WebSocketTransport webSocketTransport) {
+        this.webSocketTransport = webSocketTransport;
     }
 
     @Override
-    public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         try {
-            for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
-                publicListener.onTransportOpen(
-                        new Payload(UUID.randomUUID().toString(), "connected", TransportPacket.TransportUp));
-            }
-            this.transportImpl.onWebSocketConnect(session);
+            notifyListenersOnOpen();
+            webSocketTransport.onConnectionOpen(session);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (TransportListener publicListener : transportImpl.getPublicListeners()) {
-            publicListener.onTransportMessage(new Payload(UUID.randomUUID().toString(),
-                    message.getPayload(), TransportPacket.Payload));
-        }
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        webSocketTransport.onConnectionPayload(message);
     }
 
     @Override
-    public void handleTransportError(@NotNull WebSocketSession session, Throwable exception) throws Exception {
+    public void handleTransportError(@NotNull WebSocketSession session, Throwable exception) {
         try {
-            for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
-                publicListener.onTransportError(
-                        new Payload(UUID.randomUUID().toString(), "Websocket error. " + exception.getMessage()
-                                , TransportPacket.TransportError));
-            }
+            String errorMessage = "WebSocket error: " + exception.getMessage();
+            Payload errorPayload = new Payload(
+                    UUID.randomUUID().toString(),
+                    errorMessage,
+                    TransportPacket.TransportError
+            );
+            webSocketTransport.onConnectionOpen(session);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("Error while handling transport error: " + e.getMessage());
         }
     }
 
     @Override
-    public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus status) throws Exception {
-        for (TransportListener publicListener : this.transportImpl.getPublicListeners()) {
-            publicListener.onTransportClose(
-                    new Payload(UUID.randomUUID().toString(), "Websocket closed. Reconnect", TransportPacket.TransportDown));
+    public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus status) {
+        try {
+            Payload closePayload = new Payload(
+                    UUID.randomUUID().toString(),
+                    "WebSocket closed with status: " + status.getReason(),
+                    TransportPacket.TransportDown
+            );
+            webSocketTransport.onConnectionClose(status);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        this.transportImpl.onWebSocketClose(session, status,this.transportImpl.reconnectThresholdReached);
     }
+
+    private void notifyListenersOnOpen() {
+        Payload openPayload = new Payload(
+                UUID.randomUUID().toString(),
+                "WebSocket connection established",
+                TransportPacket.TransportUp
+        );
+        for (TransportListener listener : webSocketTransport.getPublicListeners()) {
+            listener.onTransportOpen(openPayload);
+        }
+    }
+
+
 }

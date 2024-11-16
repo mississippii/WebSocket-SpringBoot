@@ -3,7 +3,7 @@ package com.tb.transport.rest;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.TransportPacket;
 import com.tb.common.eventDriven.TransportListener;
 import com.tb.transport.Transport;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import okhttp3.*;
 
 import java.io.IOException;

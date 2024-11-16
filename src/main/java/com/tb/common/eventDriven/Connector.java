@@ -1,6 +1,6 @@
 package com.tb.common.eventDriven;
 
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.transport.Transport;
 
 

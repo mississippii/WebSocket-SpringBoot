@@ -12,7 +12,7 @@ import com.tb.common.StringUtil;
 import com.tb.common.UUIDGen;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.TransportPacket;
 import com.tb.common.eventDriven.RequestAndResponse.MultiThreadedRequestHandler;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.common.uniqueIdGenerator.ShortIdGenerator;
 
 import java.io.IOException;

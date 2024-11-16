@@ -1,5 +1,5 @@
 package com.tb.common.eventDriven;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 
 public interface RequestStatusListener {
     // Called when a response is received for a tracked request

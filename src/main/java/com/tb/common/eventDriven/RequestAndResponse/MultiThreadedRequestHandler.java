@@ -1,5 +1,6 @@
 package com.tb.common.eventDriven.RequestAndResponse;
 
+import com.tb.common.Payload;
 import com.tb.transport.Transport;
 import lombok.Data;
 

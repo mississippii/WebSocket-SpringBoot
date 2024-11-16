@@ -8,7 +8,7 @@ import com.tb.common.UUIDGen;
 import com.tb.common.eventDriven.Connector;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.TransportPacket;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.VertoPacket;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.common.eventDriven.ServiceHealthTracker;
 import com.tb.common.eventDriven.ServiceStatus;
 import com.tb.common.eventDriven.TransportListener;
@@ -41,6 +41,7 @@ public class VertoConnector implements Connector {
                 new ServiceHealthTracker(params.servicePingParams, null, this);
         List<TransportListener> listeners = Collections.singletonList(this.transportListener);
         this.transport = new WebSocketTransport(params.webSocketSettings, listeners);
+        this.transport = null;//todo
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.tb.common.eventDriven.RequestAndResponse;
 
+import com.tb.common.Payload;
+
 public abstract class Request extends Payload {
 
     public Request(String id, String data, PayloadType payloadType) {

@@ -4,7 +4,7 @@ import com.tb.calling.verto.msgTemplates.PingResult;
 import com.tb.common.eventDriven.Connector;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.TransportPacket;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.VertoPacket;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.common.eventDriven.ServiceHealthTracker;
 import com.tb.common.eventDriven.ServiceStatus;
 import com.tb.common.eventDriven.TransportListener;

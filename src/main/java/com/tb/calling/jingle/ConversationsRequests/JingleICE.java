@@ -4,7 +4,7 @@ import com.tb.calling.jingle.msgTemplates.ICEResponse;
 import com.tb.common.StringUtil;
 import com.tb.common.eventDriven.RequestAndResponse.Request;
 import com.tb.common.eventDriven.RequestAndResponse.PayloadType;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 
 public class JingleICE extends Request {
     public JingleICE(String data, PayloadType payloadType) {

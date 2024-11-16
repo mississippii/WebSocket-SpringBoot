@@ -1,14 +1,16 @@
 package com.tb.common.eventDriven;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
+import com.tb.common.RawPayload;
+import com.tb.websocket.ConnectionStatus;
+
 public interface TransportListener {
 
-void onTransportOpen(Payload payload);
+void onTransportOpen(RawPayload payload);
 
-void onTransportClose(Payload payload);
+void onTransportClose(RawPayload payload, ConnectionStatus connectionStatus);
 
-void onTransportMessage(Payload payload);
+void onTransportMessage(RawPayload payload);
 
-void onTransportError(Payload payload);
+void onTransportError(RawPayload payload);
 
-void onTransportStatus(Payload payload);
 }

@@ -6,7 +6,7 @@ import com.tb.calling.verto.msgTemplates.Hangup;
 import com.tb.calling.verto.msgTemplates.StartCall;
 import com.tb.common.eventDriven.Connector;
 import com.tb.common.eventDriven.RequestAndResponse.Enums.VertoPacket;
-import com.tb.common.eventDriven.RequestAndResponse.Payload;
+import com.tb.common.Payload;
 import com.tb.common.uniqueIdGenerator.ShortIdGenerator;
 import com.tb.common.uniqueIdGenerator.UniqueIntGenerator;
 
